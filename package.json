@@ -1,0 +1,9 @@
+{
+  "name": "runn",
+  "description": "Run n auto, but only if you need to",
+  "dependencies": {
+    "pkg-up": "^3.1.0",
+    "read-pkg-up": "^7.0.1",
+    "semver": "^7.3.4"
+  }
+}
