@@ -1,23 +1,20 @@
-const fs = require("fs");
-const { exec } = require("child_process");
-const semver = require("semver");
-const readPkgUp = require("read-pkg-up");
+import fs from 'node:fs';
+import { exec } from 'node:child_process';
+import semver from 'semver';
 
-// Build array of available versions from input file
-const versions = fs.readFileSync(process.argv.pop(), { encoding: "utf8" }).split("\n");
+if (fs.existsSync('./.n-node-version')) {
+	let target = fs.readFileSync('./.n-node-version', 'utf8');
+	if (target === 'current' || target === 'latest' || target === 'lts') {
+		exec(`n lsr ${target}`, (error, stdout) => {
+			target = stdout;
+		});
+	}
 
-// Read closest package.json file
-readPkgUp().then(file => {
-  try {
-    // Determine highest version satisfying its version constraint
-    const target = semver.maxSatisfying(versions, file.packageJson.engines.node);
-
-    // Check current node version and switch if necessary
-    exec("node -v", (error, stdout) => {
-      if (semver.clean(stdout) !== target) {
-        console.log(`Switching to node v${target}`);
-        exec(`n -p ${target}`);
-      }
-    });
-  } catch (e) {} // fail silently
-});
+	// Check current node version and switch if necessary
+	exec('node -v', (error, stdout) => {
+		if (!semver.satisfies(stdout, target)) {
+			console.log(`Switching to node ${target.startsWith('v') ? target : `v${target}`}`);
+			exec(`n auto`);
+		}
+	});
+}

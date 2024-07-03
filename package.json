@@ -1,9 +1,13 @@
 {
-  "name": "runn",
-  "description": "Run n auto, but only if you need to",
+  "name": "auto-n-auto",
+  "description": "Run n auto automatically, but only if you need to",
+  "type": "module",
+  "packageManager": "pnpm@9.4.0",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "pkg-up": "^3.1.0",
-    "read-pkg-up": "^7.0.1",
-    "semver": "^7.3.4"
+    "prettier": "3.3.2",
+    "semver": "7.6.2"
   }
 }

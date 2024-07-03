@@ -1,31 +1,36 @@
-# runn
+# auto-n-auto
 
-Run `n auto`, but only if you need to. [Read more about it here](https://neemzy.org/articles/automatically-switching-node-js-version-upon-cd-with-n)!
+A modified version of [runn](https://github.com/neemzy/runn) by [neemzy](https://github.com/neemzy)
+
+Uses the [n](https://github.com/tj/n) Node.js version manager to switch Node.js versions automatically.
+
+Run `n auto` automatically while changing directories with `zsh`, but only if you need to according to [node-semver](https://github.com/npm/node-semver).
 
 ## How it works
 
-Running this script will try to read a Node.js version constraint from the closest `package.json` file in the tree, match the current version against it, and run `n auto` if they do not match.
+This is meant to be run upon `cd` to switch automatically while keeping it fast. I use `zsh` hooks to run the script on every directory change (configuration below).
 
-It needs to receive a path to a file containing all available Node.js versions as an argument; this file can easily be generated with `n ls-remote --all`.
-
-This is meant to be ran upon `cd` to switch automatically while keeping it fast.
+Running this script will try to read a Node.js version from a `.n-node-version` file in the working directory, match the current version of Node against it, and run `n auto` if they do not match.
 
 ## Setup
 
+Pre req: make sure `n` is installed of course.
+
 ```sh
-$ npm i
+git clone git@github.com:jdk2pq/auto-n-auto.git
+pnpm i
 ```
 
-In `.zshrc` (for example):
+Add the following to your `.zshrc`:
 
 ```sh
 autoload -U add-zsh-hook
-n ls-remote --all > path/to/.node-versions
 
-switch-node-version() {
-  node path/to/runn path/to/.node-versions
+auto-n-auto() {
+  node path/to/auto-n-auto
 }
 
-add-zsh-hook chpwd switch-node-version
-switch-node-version
+add-zsh-hook chpwd auto-n-auto
+auto-n-auto
 ```
+Finally, run `source .zshrc` or restart your terminal, and it should work!
